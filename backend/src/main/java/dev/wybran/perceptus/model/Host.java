@@ -18,4 +18,13 @@ public class Host {
 
     @NonNull
     private String ip;
+
+    @NonNull
+    private String username;
+
+    @NonNull
+    private String password;
+
+    @NonNull
+    private Integer port;
 }

@@ -4,6 +4,10 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import dev.wybran.perceptus.component.SSHSessionManager;
+import dev.wybran.perceptus.model.CommandsHistory;
+import dev.wybran.perceptus.model.Host;
+import dev.wybran.perceptus.repository.CommandsHistoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,21 +18,11 @@ import java.io.InputStream;
 @AllArgsConstructor
 public class SSHService {
     private final JSch jsch = new JSch();
+    private final SSHSessionManager sessionManager;
+    private final CommandsHistoryRepository historyRepository;
 
-    public Session createSession() {
-        Session session = null;
-        try {
-            session = jsch.getSession("pi", "192.168.1.150", 22);
-            session.setPassword("raspberry");
-            session.setConfig("StrictHostKeyChecking", "no");
-            session.connect();
-        } catch (JSchException e) {
-            e.printStackTrace();
-        }
-        return session;
-    }
-
-    public String executeCommand(Session session, String command) {
+    public String executeCommand(Host host, String command) throws Exception {
+        Session session = sessionManager.getSession(host);
         ChannelExec channel = null;
         try {
             channel = (ChannelExec) session.openChannel("exec");
@@ -51,6 +45,8 @@ public class SSHService {
                     break;
                 }
             }
+            CommandsHistory history = new CommandsHistory(command, resultBuilder.toString(), host);
+            historyRepository.save(history);
 
             return resultBuilder.toString();
         } catch (JSchException | IOException e) {
