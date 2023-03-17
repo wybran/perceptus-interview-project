@@ -1,5 +1,6 @@
 package dev.wybran.perceptus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
