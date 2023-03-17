@@ -45,7 +45,7 @@ public class SSHService {
                     break;
                 }
             }
-            CommandsHistory history = new CommandsHistory(command, resultBuilder.toString(), host);
+            CommandsHistory history = new CommandsHistory(command, host);
             historyRepository.save(history);
 
             return resultBuilder.toString();

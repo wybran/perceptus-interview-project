@@ -11,7 +11,6 @@ import java.util.Date;
 public class CommandHistoryResponse {
     private Long id;
     private String command;
-    private String output;
     private Long hostID;
     private Date created_at;
 }

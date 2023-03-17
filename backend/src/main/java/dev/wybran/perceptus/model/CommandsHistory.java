@@ -1,6 +1,5 @@
 package dev.wybran.perceptus.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,9 +18,6 @@ public class CommandsHistory {
 
     @NonNull
     private String command;
-
-    @NonNull
-    private String output;
 
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
