@@ -4,18 +4,16 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 @Service
+@AllArgsConstructor
 public class SSHService {
-    private JSch jsch;
-
-    public SSHService() {
-        jsch = new JSch();
-    }
+    private final JSch jsch = new JSch();
 
     public Session createSession() {
         Session session = null;
