@@ -4,7 +4,8 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import dev.wybran.perceptus.component.SSHSessionManager;
-import dev.wybran.perceptus.dto.request.CommandRequest;
+import dev.wybran.perceptus.dto.request.SessionRequest;
+import dev.wybran.perceptus.exception.BadRequestException;
 import dev.wybran.perceptus.model.CommandsHistory;
 import dev.wybran.perceptus.repository.CommandsHistoryRepository;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -20,12 +22,24 @@ public class SSHService {
     private final SSHSessionManager sessionManager;
     private final CommandsHistoryRepository historyRepository;
 
-    public String executeCommand(CommandRequest req) {
-        Session session = sessionManager.getSession(req);
+    public String newSession(SessionRequest req) {
+        String uuid = UUID.randomUUID().toString();
+        Session session = sessionManager.newSession(req, uuid);
+        if (session.isConnected()) {
+            return uuid;
+        } else
+            return "Error";
+    }
+
+    public String executeCommand(String uuid, String command) {
+        Session session = sessionManager.getSession(uuid);
+        if (session == null || !session.isConnected()) {
+            throw new BadRequestException("Session not found");
+        }
         ChannelExec channel = null;
         try {
             channel = (ChannelExec) session.openChannel("exec");
-            channel.setCommand(req.getCommand());
+            channel.setCommand(command);
             channel.setInputStream(null);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ByteArrayOutputStream err = new ByteArrayOutputStream();
@@ -50,7 +64,7 @@ public class SSHService {
                     break;
                 }
             }
-            CommandsHistory history = new CommandsHistory(req.getCommand(), req.getIp());
+            CommandsHistory history = new CommandsHistory(command, session.getHost());
             historyRepository.save(history);
 
             String outStr = out.toString();
