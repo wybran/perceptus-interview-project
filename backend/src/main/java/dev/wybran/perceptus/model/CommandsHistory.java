@@ -20,8 +20,7 @@ public class CommandsHistory {
     private String command;
 
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Host host;
+    private String hostIP;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp

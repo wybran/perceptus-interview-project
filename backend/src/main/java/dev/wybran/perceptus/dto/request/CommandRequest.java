@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class HostRequest {
-    private String name;
+public class CommandRequest {
     private String ip;
+    private Integer port;
     private String username;
     private String password;
-    private Integer port;
+    private String command;
 }

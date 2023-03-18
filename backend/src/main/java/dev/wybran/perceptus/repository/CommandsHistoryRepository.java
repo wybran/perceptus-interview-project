@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CommandsHistoryRepository extends JpaRepository<CommandsHistory, Integer> {
-    List<CommandsHistory> findAllByHostId(Long hostId);
+    List<CommandsHistory> findAllByHostIP(String hostIP);
 }

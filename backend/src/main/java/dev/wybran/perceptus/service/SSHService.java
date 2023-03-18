@@ -4,8 +4,8 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import dev.wybran.perceptus.component.SSHSessionManager;
+import dev.wybran.perceptus.dto.request.CommandRequest;
 import dev.wybran.perceptus.model.CommandsHistory;
-import dev.wybran.perceptus.model.Host;
 import dev.wybran.perceptus.repository.CommandsHistoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ public class SSHService {
     private final SSHSessionManager sessionManager;
     private final CommandsHistoryRepository historyRepository;
 
-    public String executeCommand(Host host, String command) {
-        Session session = sessionManager.getSession(host);
+    public String executeCommand(CommandRequest req) {
+        Session session = sessionManager.getSession(req);
         ChannelExec channel = null;
         try {
             channel = (ChannelExec) session.openChannel("exec");
-            channel.setCommand(command);
+            channel.setCommand(req.getCommand());
             channel.setInputStream(null);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ByteArrayOutputStream err = new ByteArrayOutputStream();
@@ -50,7 +50,7 @@ public class SSHService {
                     break;
                 }
             }
-            CommandsHistory history = new CommandsHistory(command, host);
+            CommandsHistory history = new CommandsHistory(req.getCommand(), req.getIp());
             historyRepository.save(history);
 
             String outStr = out.toString();

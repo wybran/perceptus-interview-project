@@ -21,8 +21,8 @@ public class CommandsHistoryService {
         return response;
     }
 
-    public List<CommandHistoryResponse> getHistoryByHostId(Long hostId) {
-        List<CommandsHistory> history = historyRepository.findAllByHostId(hostId);
+    public List<CommandHistoryResponse> getHistoryByHostIP(String hostIP) {
+        List<CommandsHistory> history = historyRepository.findAllByHostIP(hostIP);
         List<CommandHistoryResponse> response = new ArrayList<>();
         history.forEach(h -> response.add(toResponse(h)));
         return response;
@@ -32,7 +32,7 @@ public class CommandsHistoryService {
         return new CommandHistoryResponse(
                 history.getId(),
                 history.getCommand(),
-                history.getHost().getId(),
+                history.getHostIP(),
                 history.getCreated_at()
         );
     }
