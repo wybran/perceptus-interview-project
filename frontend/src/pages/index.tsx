@@ -1,20 +1,26 @@
-"use client";
+import { SessionRequest } from "@/src/features/ssh/types";
+import { useSSH } from "@/src/features/ssh/useSSH";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-type Inputs = {
-    IP: string;
-    username: string;
-    password: string;
-    port: number;
-    command: string;
-};
-
 export default function Home() {
-    const {
-        register,
-        handleSubmit
-    } = useForm<Inputs>();
-    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+    const { register, handleSubmit } = useForm<SessionRequest>();
+
+    const { newSession } = useSSH();
+
+    const onSubmit: SubmitHandler<SessionRequest> = (data) => {
+        console.log(data);
+        newSession.mutate(data, {
+            onSuccess: (response) => {
+                if(response.status !== 200) {
+                    console.log("Error");
+                    return;
+                }
+                response.text().then((data) => {
+                    console.log("OK"+data);
+                });
+            }
+        });
+    };
 
     return (
         <main>
@@ -23,10 +29,10 @@ export default function Home() {
                 <div className="form-group">
                     <label htmlFor="IP">IP</label>
                     <input
-                        {...register("IP", { required: true })}
+                        {...register("ip", { required: true })}
                         type="text"
                         className="form-control"
-                        id="IP"
+                        id="ip"
                         placeholder="Enter IP address"
                     />
                 </div>
@@ -59,16 +65,6 @@ export default function Home() {
                         id="port"
                         placeholder="Enter port"
                         defaultValue={22}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="command">Command</label>
-                    <input
-                        {...register("command", { required: true })}
-                        type="text"
-                        className="form-control"
-                        id="command"
-                        placeholder="Enter command"
                     />
                 </div>
                 <button type="submit" className="btn btn-primary">
