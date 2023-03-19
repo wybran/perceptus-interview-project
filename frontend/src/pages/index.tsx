@@ -1,8 +1,10 @@
 import { SessionRequest } from "@/src/features/ssh/types";
 import { useSSH } from "@/src/features/ssh/useSSH";
+import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 export default function Home() {
+    const router = useRouter();
     const { register, handleSubmit } = useForm<SessionRequest>();
 
     const { newSession } = useSSH();
@@ -11,12 +13,12 @@ export default function Home() {
         console.log(data);
         newSession.mutate(data, {
             onSuccess: (response) => {
-                if(response.status !== 200) {
-                    console.log("Error");
-                    return;
-                }
                 response.text().then((data) => {
-                    console.log("OK"+data);
+                    if(response.status !== 200) {
+                        console.error(data);
+                        return;
+                    }
+                    router.push(`/console/${data}`);
                 });
             }
         });
