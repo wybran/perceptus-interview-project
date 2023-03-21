@@ -5,12 +5,14 @@ import { ToastContainer } from 'react-toastify';
 import '../globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'react-toastify/dist/ReactToastify.css';
+import { Navbar } from '../components/Navbar';
 
 const queryClient = new QueryClient()
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
+        <Navbar />
         <ToastContainer />
         <Component {...pageProps} />
     </QueryClientProvider>
