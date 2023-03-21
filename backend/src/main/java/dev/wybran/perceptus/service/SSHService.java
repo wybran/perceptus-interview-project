@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,7 +29,7 @@ public class SSHService {
         String uuid = UUID.randomUUID().toString();
         Session session = sessionManager.newSession(req, uuid);
         if (session.isConnected()) {
-            return new NewSessionResponse(uuid);
+            return new NewSessionResponse(uuid, session.getHost(), session.getPort(), session.getUserName());
         } else {
             throw new BadRequestException("Could not connect to host");
         }
@@ -85,5 +86,15 @@ public class SSHService {
             }
         }
     }
+
+    public List<NewSessionResponse> getSessions() {
+        return sessionManager.getSessions();
+    }
+
+    public void removeSession(String uuid) {
+        sessionManager.removeSession(uuid);
+    }
+
+
 
 }

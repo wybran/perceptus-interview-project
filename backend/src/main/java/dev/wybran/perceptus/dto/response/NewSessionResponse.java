@@ -8,4 +8,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class NewSessionResponse {
     private String uuid;
+    private String hostIP;
+    private Integer port;
+    private String username;
 }
