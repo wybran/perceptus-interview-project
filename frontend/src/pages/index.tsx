@@ -2,6 +2,7 @@ import { SessionRequest } from "@/src/features/ssh/types";
 import { useSSH } from "@/src/features/ssh/useSSH";
 import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function Home() {
     const router = useRouter();
@@ -9,19 +10,18 @@ export default function Home() {
 
     const { newSession } = useSSH();
 
-    const onSubmit: SubmitHandler<SessionRequest> = (data) => {
-        console.log(data);
-        newSession.mutate(data, {
-            onSuccess: (response) => {
-                response.text().then((data) => {
-                    if(response.status !== 200) {
-                        console.error(data);
-                        return;
-                    }
-                    router.push(`/console/${data}`);
-                });
-            }
-        });
+    const onSubmit: SubmitHandler<SessionRequest> = async (
+        request: SessionRequest
+    ) => {
+        await toast
+            .promise(newSession.mutateAsync(request), {
+                pending: "Tworzenie nowej sesji...",
+                success: "Sesja utworzona 👌",
+                error: `Błąd podczas tworzenia sesji 😢`
+            })
+            .then((data) => {
+                router.push(`/console/${data.uuid}`);
+            });
     };
 
     return (

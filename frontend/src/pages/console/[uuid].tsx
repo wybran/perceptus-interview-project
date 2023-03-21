@@ -2,6 +2,7 @@ import { useSSH } from "@/src/features/ssh/useSSH";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Terminal, { ColorMode, TerminalOutput } from "react-terminal-ui";
+import { toast } from "react-toastify";
 
 export default function Console() {
     const router = useRouter();
@@ -11,7 +12,7 @@ export default function Console() {
     const { executeCommand } = useSSH();
 
     const [terminalLineData, setTerminalLineData] = useState([
-        <TerminalOutput>Welcome to the React Terminal UI Demo!</TerminalOutput>
+        <TerminalOutput>Pomyślnie połączono z sesją SSH!</TerminalOutput>
     ]);
 
     const onInput = (input: string) => {
@@ -19,26 +20,33 @@ export default function Console() {
             ...prevTerminalLineData,
             <TerminalOutput>{input}</TerminalOutput>
         ]);
-        executeCommand.mutate({ uuid: uuid, command: input }, {
-            onSuccess: (response) => {
-                response.text().then((data) => {
-                    if(response.status !== 200) {
-                        console.error(data);
-                        return;
-                    }
-                    setTerminalLineData((prevTerminalLineData) => [
-                        ...prevTerminalLineData,
-                        <TerminalOutput>{data}</TerminalOutput>
-                    ]);
+        executeCommand.mutate(
+            { uuid: uuid, command: input },
+            {
+                onSuccess: (response) => {
+                    if(!response.isError) 
+                        setTerminalLineData((prevTerminalLineData) => [
+                            ...prevTerminalLineData,
+                            <TerminalOutput>{response.output}</TerminalOutput>
+                        ]);
+                    else
+                        setTerminalLineData((prevTerminalLineData) => [
+                            ...prevTerminalLineData,
+                            <TerminalOutput><b>{response.output}</b></TerminalOutput>
+                        ]);
+                },
+                onError: () => {
+                    toast.error("Błąd sesji SSH 😢");
+                    router.push("/");
                 }
-            )
-        }});
+            }
+        );
     };
 
     return (
         <div className="container">
             <Terminal
-                name="React Terminal Usage Example"
+                name="SSH Console"
                 colorMode={ColorMode.Light}
                 onInput={onInput}>
                 {terminalLineData}
