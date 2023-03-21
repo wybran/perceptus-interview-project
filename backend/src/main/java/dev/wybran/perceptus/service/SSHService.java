@@ -5,6 +5,8 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import dev.wybran.perceptus.component.SSHSessionManager;
 import dev.wybran.perceptus.dto.request.SessionRequest;
+import dev.wybran.perceptus.dto.response.CommandResponse;
+import dev.wybran.perceptus.dto.response.NewSessionResponse;
 import dev.wybran.perceptus.exception.BadRequestException;
 import dev.wybran.perceptus.model.CommandsHistory;
 import dev.wybran.perceptus.repository.CommandsHistoryRepository;
@@ -22,16 +24,17 @@ public class SSHService {
     private final SSHSessionManager sessionManager;
     private final CommandsHistoryRepository historyRepository;
 
-    public String newSession(SessionRequest req) {
+    public NewSessionResponse newSession(SessionRequest req) {
         String uuid = UUID.randomUUID().toString();
         Session session = sessionManager.newSession(req, uuid);
         if (session.isConnected()) {
-            return uuid;
-        } else
-            return "Error";
+            return new NewSessionResponse(uuid);
+        } else {
+            throw new BadRequestException("Could not connect to host");
+        }
     }
 
-    public String executeCommand(String uuid, String command) {
+    public CommandResponse executeCommand(String uuid, String command) {
         Session session = sessionManager.getSession(uuid);
         if (session == null || !session.isConnected()) {
             throw new BadRequestException("Session not found");
@@ -70,12 +73,12 @@ public class SSHService {
             String outStr = out.toString();
             String errStr = err.toString();
             if (!errStr.isEmpty()) {
-                return errStr;
+                return new CommandResponse(command, errStr, true);
             } else {
-                return outStr;
+                return new CommandResponse(command, outStr, false);
             }
         } catch (JSchException | IOException e) {
-            return "Error: " + e.getMessage();
+            throw new BadRequestException("Could not execute command");
         } finally {
             if (channel != null) {
                 channel.disconnect();
