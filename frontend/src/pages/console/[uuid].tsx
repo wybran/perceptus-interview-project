@@ -9,7 +9,7 @@ export default function Console() {
     const params = router.query;
     const uuid = params.uuid as string;
 
-    const { executeCommand } = useSSH();
+    const { executeCommand, deleteSession } = useSSH();
 
     const [terminalLineData, setTerminalLineData] = useState([
         <TerminalOutput>Pomyślnie połączono z sesją SSH!</TerminalOutput>
@@ -45,6 +45,14 @@ export default function Console() {
 
     return (
         <div className="container">
+            <button
+                className="btn btn-danger"
+                onClick={() => {
+                    deleteSession.mutate(uuid);
+                    router.push("/");
+                }}>
+                Close session
+            </button>
             <Terminal
                 name="SSH Console"
                 colorMode={ColorMode.Light}
