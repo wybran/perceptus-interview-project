@@ -1,1 +1,5 @@
-# perceptus-interview-project
+## Build
+
+```bash
+docker-compose up
+```
