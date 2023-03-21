@@ -15,7 +15,7 @@ public class CommandsHistoryService {
     private final CommandsHistoryRepository historyRepository;
 
     public List<CommandHistoryResponse> getHistory() {
-        List<CommandsHistory> history = historyRepository.findAll();
+        List<CommandsHistory> history = historyRepository.findByOrderByIdDesc();
         List<CommandHistoryResponse> response = new ArrayList<>();
         history.forEach(h -> response.add(toResponse(h)));
         return response;

@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CommandsHistoryRepository extends JpaRepository<CommandsHistory, Integer> {
     List<CommandsHistory> findAllByHostIP(String hostIP);
+    List<CommandsHistory> findByOrderByIdDesc();
 }
