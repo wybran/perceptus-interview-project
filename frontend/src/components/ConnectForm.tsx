@@ -16,9 +16,9 @@ export const ConnectForm = () => {
     ) => {
         await toast
             .promise(newSession.mutateAsync(request), {
-                pending: "Tworzenie nowej sesji...",
-                success: "Sesja utworzona 👌",
-                error: `Błąd podczas tworzenia sesji 😢`
+                pending: "Creating session...",
+                success: "Session created!",
+                error: `Error creating session 🙁`
             })
             .then((data) => {
                 router.push(`/console/${data.uuid}`);
@@ -27,7 +27,7 @@ export const ConnectForm = () => {
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="border border-primary rounded p-3">
+            className="border-green rounded p-3">
             <div className="form-group">
                 <label htmlFor="IP">IP</label>
                 <input
@@ -69,8 +69,8 @@ export const ConnectForm = () => {
                     defaultValue={22}
                 />
             </div>
-            <button type="submit" className="btn btn-primary mt-3">
-                Submit
+            <button type="submit" className="btn btn-green mt-3">
+                Connect
             </button>
         </form>
     );

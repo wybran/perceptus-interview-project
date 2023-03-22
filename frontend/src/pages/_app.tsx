@@ -1,11 +1,11 @@
 import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from 'react-toastify';
+import { Navbar } from '../components/Navbar';
 
-import '../globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'react-toastify/dist/ReactToastify.css';
-import { Navbar } from '../components/Navbar';
+import '../globals.css'
 
 const queryClient = new QueryClient()
 

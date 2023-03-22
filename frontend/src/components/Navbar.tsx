@@ -19,19 +19,21 @@ export const Navbar = () => {
     const isActive = (href: string) => href === asPath;
 
     return (
-        <ul className="nav justify-content-center">
-            {LINKS.map((link) => (
-                <li key={link.href} className="nav-item">
-                    <Link
-                        href={link.href}
-                        className={
-                            (clsx(isActive(link.href) ? "active" : ""),
-                            "nav-link")
-                        }>
-                        {link.title}
-                    </Link>
-                </li>
-            ))}
-        </ul>
+        <nav className="navbar navbar-dark bg-dark navbar-expand-lg justify-content-center">
+            <ul className="navbar-nav">
+                {LINKS.map(({ title, href }) => (
+                    <li key={href} className="nav-item">
+                        <Link
+                            href={href}
+                            className={clsx(
+                                "nav-link",
+                                isActive(href) && "active"
+                            )}>
+                            {title}
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+        </nav>
     );
 };

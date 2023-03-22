@@ -52,10 +52,10 @@ export const HistoryTable = ({ data }: HistoryTableProps) => {
                 type="text"
                 className="form-control mb-2"
                 placeholder="Search..."
-                value={globalFilter ?? ''}
+                value={globalFilter ?? ""}
                 onChange={(e) => table.setGlobalFilter(e.target.value)}
             />
-            <table className="table table-striped table-dark">
+            <table>
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
@@ -87,31 +87,58 @@ export const HistoryTable = ({ data }: HistoryTableProps) => {
                     ))}
                 </tbody>
             </table>
+            <ul className="pagination">
+                <li className="page-item">
+                    <button
+                        className="border rounded p-1"
+                        onClick={() => table.setPageIndex(0)}
+                        disabled={!table.getCanPreviousPage()}>
+                        ⏪
+                    </button>
+                </li>
+                <li className="page-item">
+                    <button
+                        className="border rounded p-1"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}>
+                        ⬅️
+                    </button>
+                </li>
+                <li className="page-item">
+                    <button
+                        className="border rounded p-1"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}>
+                        ➡️
+                    </button>
+                </li>
+                <li className="page-item">
+                    <button
+                        className="border rounded p-1"
+                        onClick={() =>
+                            table.setPageIndex(table.getPageCount() - 1)
+                        }
+                        disabled={!table.getCanNextPage()}>
+                        ⏩
+                    </button>
+                </li>
+                <li className="page-item">
+                    <select
+                        className="form-select"
+                        style={{ width: "150px", marginLeft: "10px" }}
+                        value={table.getState().pagination.pageSize}
+                        onChange={(e) => {
+                            table.setPageSize(Number(e.target.value));
+                        }}>
+                        {[10, 20, 30, 40, 50].map((pageSize) => (
+                            <option key={pageSize} value={pageSize}>
+                                Show {pageSize}
+                            </option>
+                        ))}
+                    </select>
+                </li>
+            </ul>
             <div className="flex items-center gap-2">
-                <button
-                    className="border rounded p-1"
-                    onClick={() => table.setPageIndex(0)}
-                    disabled={!table.getCanPreviousPage()}>
-                    {"<<"}
-                </button>
-                <button
-                    className="border rounded p-1"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}>
-                    {"<"}
-                </button>
-                <button
-                    className="border rounded p-1"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}>
-                    {">"}
-                </button>
-                <button
-                    className="border rounded p-1"
-                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                    disabled={!table.getCanNextPage()}>
-                    {">>"}
-                </button>
                 <span className="flex items-center gap-1">
                     <div>Page</div>
                     <strong>
@@ -133,17 +160,6 @@ export const HistoryTable = ({ data }: HistoryTableProps) => {
                         className="border p-1 rounded w-16"
                     />
                 </span>
-                <select
-                    value={table.getState().pagination.pageSize}
-                    onChange={(e) => {
-                        table.setPageSize(Number(e.target.value));
-                    }}>
-                    {[10, 20, 30, 40, 50].map((pageSize) => (
-                        <option key={pageSize} value={pageSize}>
-                            Show {pageSize}
-                        </option>
-                    ))}
-                </select>
             </div>
         </>
     );

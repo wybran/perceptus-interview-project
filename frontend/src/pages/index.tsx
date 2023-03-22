@@ -5,7 +5,7 @@ export default function Home() {
     return (
         <main className="container">
             <div className="row">
-                <div className="col-md-6 offset-md-3 mt-5">
+                <div className="col-md-8 offset-md-2 mt-5">
                     <h1>Connect to SSH server</h1>
                     <ConnectForm />
                     <ActiveSessions />
