@@ -27,7 +27,7 @@ export const ConnectForm = () => {
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="border-green rounded p-3">
+            className="border rounded p-3">
             <div className="form-group">
                 <label htmlFor="IP">IP</label>
                 <input
@@ -69,7 +69,7 @@ export const ConnectForm = () => {
                     defaultValue={22}
                 />
             </div>
-            <button type="submit" className="btn btn-green mt-3">
+            <button type="submit" className="btn btn-primary mt-3">
                 Connect
             </button>
         </form>

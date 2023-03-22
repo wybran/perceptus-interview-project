@@ -24,19 +24,3 @@ table tbody tr {
 table tbody tr:last-of-type {
     border-bottom: 2px solid #009879;
 }
-
-.btn-green {
-    background-color: #009879;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.btn-green:hover {
-    background-color: #00816a;
-}
-.border-green {
-    border: 1px solid #009879;
-}

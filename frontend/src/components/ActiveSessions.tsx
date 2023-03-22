@@ -11,7 +11,7 @@ export const ActiveSessions = () => {
             {activeSessions &&
                 activeSessions.map((session) => {
                     return (
-                        <div className="card mt-3">
+                        <div className="card mt-3" key={session.uuid}>
                             <div className="card-body">
                                 <h5 className="card-title">
                                     {session.username}@{session.hostIP}:{session.port}

@@ -12,7 +12,7 @@ export default function Console() {
     const { executeCommand, deleteSession } = useSSH();
 
     const [terminalLineData, setTerminalLineData] = useState([
-        <TerminalOutput>Pomyślnie połączono z sesją SSH!</TerminalOutput>
+        <TerminalOutput>SSH session successfully connected</TerminalOutput>
     ]);
 
     const onInput = (input: string) => {
@@ -24,7 +24,7 @@ export default function Console() {
             { uuid: uuid, command: input },
             {
                 onSuccess: (response) => {
-                    if(!response.isError) 
+                    if (!response.isError)
                         setTerminalLineData((prevTerminalLineData) => [
                             ...prevTerminalLineData,
                             <TerminalOutput>{response.output}</TerminalOutput>
@@ -32,7 +32,9 @@ export default function Console() {
                     else
                         setTerminalLineData((prevTerminalLineData) => [
                             ...prevTerminalLineData,
-                            <TerminalOutput><b>{response.output}</b></TerminalOutput>
+                            <TerminalOutput>
+                                <b>{response.output}</b>
+                            </TerminalOutput>
                         ]);
                 },
                 onError: () => {
@@ -46,19 +48,21 @@ export default function Console() {
     return (
         <div className="container">
             <button
-                className="btn btn-danger"
+                className="btn btn-danger m-3"
                 onClick={() => {
                     deleteSession.mutate(uuid);
                     router.push("/");
                 }}>
                 Close session
             </button>
-            <Terminal
-                name="SSH Console"
-                colorMode={ColorMode.Light}
-                onInput={onInput}>
-                {terminalLineData}
-            </Terminal>
+            <div className="row">
+                <Terminal
+                    name="SSH Console"
+                    colorMode={ColorMode.Dark}
+                    onInput={onInput}>
+                    {terminalLineData}
+                </Terminal>
+            </div>
         </div>
     );
 }
